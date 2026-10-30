@@ -98,7 +98,7 @@ function Shell() {
   const { canInstall, install } = useInstallPrompt()
 
   return (
-    <div className="min-h-screen bg-bg text-ink md:pl-56">
+    <div className="min-h-dvh bg-bg text-ink md:pl-56">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-56 flex-col border-r border-line bg-panel md:flex">
         <div className="flex items-center gap-2.5 px-5 py-5">
@@ -139,13 +139,13 @@ function Shell() {
       </aside>
 
       {/* Mobile header */}
-      <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-line bg-panel/95 px-4 py-3 backdrop-blur md:hidden">
+      <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-line bg-panel/95 pb-3 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[calc(0.75rem+env(safe-area-inset-top))] backdrop-blur md:hidden">
         <CandlestickChart size={20} className="text-up" aria-hidden />
         <span className="font-bold tracking-tight">TradeX</span>
         <span className="ml-auto text-xs text-dim">{TABS.find((t) => t.id === tab)?.label}</span>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-4 px-4 pb-28 pt-4 md:px-6 md:pb-10 md:pt-6">
+      <main className="mx-auto max-w-7xl space-y-4 px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-4 md:px-6 md:pb-10 md:pt-6">
         {!storageOk && (
           <div role="alert" className="rounded-xl border border-down/40 bg-down/10 px-4 py-3 text-sm text-ink">
             Browser storage is unavailable, so your changes will be lost on reload. Use Data → Export JSON to save a
@@ -164,7 +164,7 @@ function Shell() {
 
       {/* Mobile bottom nav */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-panel/95 backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-panel/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
         aria-label="Main"
       >
         {TABS.map(({ id, label, icon: Icon }) => (
@@ -173,7 +173,7 @@ function Shell() {
             type="button"
             onClick={() => setTab(id)}
             aria-current={tab === id ? 'page' : undefined}
-            className={`flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors ${
+            className={`flex min-h-14 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors ${
               tab === id ? 'text-accent' : 'text-dim'
             }`}
           >

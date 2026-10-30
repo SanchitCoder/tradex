@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useJournal } from '../../context/JournalContext'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { pnlByAsset, type AssetPnl } from '../../utils/calculations'
 import { formatCompactCurrency, formatSignedCurrency } from '../../utils/formatters'
 import { Card, EmptyState } from '../ui/Card'
@@ -24,8 +25,14 @@ function AssetTooltip({ active, payload }: TooltipProps) {
   )
 }
 
+/** "Gold (XAU/USD)" -> "XAU/USD" so labels fit a phone-width axis. */
+function shortAsset(name: string): string {
+  return /\(([^)]+)\)/.exec(name)?.[1] ?? name
+}
+
 export function PnlByAsset() {
   const { closedTrades } = useJournal()
+  const narrow = useMediaQuery('(max-width: 639px)')
   const data = useMemo(() => pnlByAsset(closedTrades), [closedTrades])
 
   return (
@@ -42,7 +49,7 @@ export function PnlByAsset() {
         <EmptyState message="No closed trades yet." />
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(180, data.length * 38 + 40)}>
-          <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }} barCategoryGap="30%">
+          <BarChart data={data} layout="vertical" margin={{ top: 4, right: narrow ? 8 : 16, bottom: 0, left: 0 }} barCategoryGap="30%">
             <CartesianGrid stroke={CHART.grid} strokeDasharray="3 3" horizontal={false} />
             <XAxis
               type="number"
@@ -54,7 +61,8 @@ export function PnlByAsset() {
             <YAxis
               type="category"
               dataKey="asset"
-              width={118}
+              width={narrow ? 64 : 118}
+              tickFormatter={narrow ? shortAsset : undefined}
               tick={AXIS_TICK}
               axisLine={false}
               tickLine={false}

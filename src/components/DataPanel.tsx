@@ -44,7 +44,7 @@ export function DataPanel() {
         {installed ? (
           <p className="text-sm text-up">TradeX is running as an installed app.</p>
         ) : canInstall ? (
-          <Button onClick={install}>
+          <Button className="w-full sm:w-auto" onClick={install}>
             <MonitorDown size={16} aria-hidden /> Install TradeX
           </Button>
         ) : (
@@ -57,14 +57,14 @@ export function DataPanel() {
       </Card>
 
       <Card title="Backup & export" subtitle="Everything is stored in this browser's localStorage. Export a backup now and then.">
-        <div className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={() => exportJournalJSON(state)}>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => exportJournalJSON(state)}>
             <Download size={16} aria-hidden /> Export JSON
           </Button>
-          <Button variant="outline" onClick={() => fileRef.current?.click()}>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => fileRef.current?.click()}>
             <Upload size={16} aria-hidden /> Import JSON
           </Button>
-          <Button variant="outline" onClick={() => exportTradesCSV(trades)} disabled={trades.length === 0}>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => exportTradesCSV(trades)} disabled={trades.length === 0}>
             <FileSpreadsheet size={16} aria-hidden /> Export trades CSV
           </Button>
           <input
@@ -89,13 +89,13 @@ export function DataPanel() {
       </Card>
 
       <Card title="Danger zone">
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {hasSamples && (
-            <Button variant="outline" onClick={() => setConfirmClearSamples(true)}>
+            <Button variant="outline" className="w-full sm:w-auto" onClick={() => setConfirmClearSamples(true)}>
               <Eraser size={16} aria-hidden /> Clear sample data
             </Button>
           )}
-          <Button variant="danger" onClick={() => setConfirmReset(true)}>
+          <Button variant="danger" className="w-full sm:w-auto" onClick={() => setConfirmReset(true)}>
             <RotateCcw size={16} aria-hidden /> Reset journal
           </Button>
         </div>

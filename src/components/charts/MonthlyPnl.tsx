@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useJournal } from '../../context/JournalContext'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { monthlyPnl, type MonthPnl } from '../../utils/calculations'
 import { formatCompactCurrency, formatMonthKey, formatSignedCurrency } from '../../utils/formatters'
 import { Card, EmptyState } from '../ui/Card'
@@ -25,6 +26,7 @@ function MonthTooltip({ active, payload }: TooltipProps) {
 }
 
 export function MonthlyPnl() {
+  const narrow = useMediaQuery('(max-width: 639px)')
   const { closedTrades } = useJournal()
   const data = useMemo(() => monthlyPnl(closedTrades), [closedTrades])
 
@@ -56,7 +58,7 @@ export function MonthlyPnl() {
               tick={AXIS_TICK}
               axisLine={false}
               tickLine={false}
-              width={56}
+              width={narrow ? 48 : 56}
             />
             <ReferenceLine y={0} stroke={CHART.axis} />
             <Tooltip content={<MonthTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />

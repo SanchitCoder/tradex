@@ -17,6 +17,8 @@ import { Filters } from './Filters'
 import { CategoryTag, DirectionBadge, OutcomeBadge } from './ui/Badges'
 import { Card, EmptyState } from './ui/Card'
 import { ConfirmDialog } from './ui/ConfirmDialog'
+import { Metric } from './ui/Metric'
+import { inputClass } from './ui/Field'
 
 const ROW_TINT: Record<Outcome, string> = {
   Profit: 'bg-up/10 hover:bg-up/[0.16]',
@@ -26,6 +28,17 @@ const ROW_TINT: Record<Outcome, string> = {
 
 const th = 'whitespace-nowrap px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-dim'
 const td = 'whitespace-nowrap px-3 py-3'
+
+const SORT_OPTIONS: Array<{ key: SortKey; label: string }> = [
+  { key: 'closedAt', label: 'Date closed' },
+  { key: 'pnl', label: 'P&L $' },
+  { key: 'pnlPct', label: 'P&L %' },
+  { key: 'rMultiple', label: 'R multiple' },
+  { key: 'holding', label: 'Time held' },
+  { key: 'asset', label: 'Asset' },
+  { key: 'direction', label: 'Direction' },
+  { key: 'strategy', label: 'Strategy' },
+]
 
 interface SortHeaderProps {
   label: string
@@ -109,7 +122,98 @@ export function TradeHistory() {
             }
           />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="flex items-center gap-2 border-b border-line px-4 py-3 lg:hidden">
+            <label htmlFor="th-sort" className="text-[11px] font-medium uppercase tracking-wider text-dim">
+              Sort
+            </label>
+            <select
+              id="th-sort"
+              className={`${inputClass} flex-1`}
+              value={sortKey}
+              onChange={(e) => onSort(e.target.value as SortKey)}
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.key} value={o.key}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
+              aria-label={sortDir === 'asc' ? 'Ascending, switch to descending' : 'Descending, switch to ascending'}
+              className="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-line text-dim transition-colors hover:bg-panel2 hover:text-ink"
+            >
+              {sortDir === 'asc' ? <ArrowUp size={16} aria-hidden /> : <ArrowDown size={16} aria-hidden />}
+            </button>
+          </div>
+          <ul className="lg:hidden">
+            {rows.map((t) => {
+              const open = expanded === t.id
+              return (
+                <li key={t.id} className={`space-y-3 border-b border-line/60 p-4 ${ROW_TINT[t.outcome]}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="font-medium text-ink">{t.asset}</div>
+                      <CategoryTag category={t.category} />
+                      {t.isSample && <span className="ml-2 text-[10px] uppercase text-warn">sample</span>}
+                      <div className="mt-1 text-xs text-dim">{formatDateTime(t.closedAt)}</div>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-1.5">
+                      <DirectionBadge direction={t.direction} />
+                      <OutcomeBadge outcome={t.outcome} />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 font-mono tabular-nums">
+                    <span className={`text-lg font-semibold ${pnlColor(t.pnl)}`}>{formatSignedCurrency(t.pnl)}</span>
+                    <span className={`text-sm ${pnlColor(t.pnl)}`}>{formatSignedPercent(t.pnlPct)}</span>
+                    <span className={`text-sm ${pnlColor(t.rMultiple)}`}>{formatR(t.rMultiple)}</span>
+                  </div>
+                  <dl className="grid grid-cols-3 gap-x-3 gap-y-2.5 rounded-lg border border-line bg-bg p-3">
+                    <Metric label="Entry" value={formatPrice(t.entry)} />
+                    <Metric label="Exit" value={formatPrice(t.exitPrice)} />
+                    <Metric label="Held" value={formatDuration(holdingMs(t))} tone="text-dim" />
+                    <div className="col-span-3 min-w-0">
+                      <dt className="text-[11px] text-dim">Strategy</dt>
+                      <dd className="text-[13px] text-ink">{t.strategy || '—'}</dd>
+                    </div>
+                  </dl>
+                  {open && (
+                    <div className="space-y-3 rounded-lg bg-panel2 p-3 text-sm">
+                      <Note label="Reason for entry" text={t.notes} />
+                      <Note label="Lesson learned" text={t.postNotes} />
+                      <div>
+                        <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-dim">Exit</div>
+                        <p className="text-ink">{t.exitReason}</p>
+                        <p className="mt-0.5 text-xs text-dim">Opened {formatDateTime(t.openedAt)}</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      onClick={() => setExpanded(open ? null : t.id)}
+                      className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-md border border-line text-sm font-medium text-ink transition-colors hover:bg-panel2"
+                    >
+                      {open ? <ChevronDown size={16} aria-hidden /> : <ChevronRight size={16} aria-hidden />}
+                      {open ? 'Hide notes' : 'Show notes'}
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Delete ${t.asset} trade`}
+                      onClick={() => setDeleting(t)}
+                      className="inline-flex size-11 items-center justify-center rounded-md border border-line text-dim transition-colors hover:bg-down/15 hover:text-down"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+          <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[1100px] text-sm">
               <thead className="border-b border-line">
                 <tr>
@@ -215,6 +319,7 @@ export function TradeHistory() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </Card>
 

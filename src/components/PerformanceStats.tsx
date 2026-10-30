@@ -24,8 +24,8 @@ interface StatProps {
 function Stat({ label, value, sub, tone = 'text-ink' }: StatProps) {
   return (
     <div className="rounded-lg border border-line bg-bg px-3 py-2.5 transition-colors hover:border-dim/40">
-      <div className="truncate text-[11px] font-medium uppercase tracking-wider text-dim">{label}</div>
-      <div className={`mt-1 truncate font-mono text-lg font-semibold tabular-nums ${tone}`}>{value}</div>
+      <div className="text-[11px] font-medium uppercase leading-snug tracking-wider text-dim sm:truncate">{label}</div>
+      <div className={`mt-1 break-words font-mono text-lg font-semibold tabular-nums ${tone}`}>{value}</div>
       {sub && <div className="truncate font-mono text-xs tabular-nums text-dim">{sub}</div>}
     </div>
   )

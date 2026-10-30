@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useJournal } from '../../context/JournalContext'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import type { EquityPoint } from '../../types'
 import { buildEquityCurve } from '../../utils/calculations'
 import {
@@ -33,6 +34,7 @@ function EquityTooltip({ active, payload }: TooltipProps) {
 }
 
 export function EquityCurve() {
+  const narrow = useMediaQuery('(max-width: 639px)')
   const { closedTrades, account } = useJournal()
   const data = useMemo(
     () => buildEquityCurve(closedTrades, account.startingCapital),
@@ -55,7 +57,7 @@ export function EquityCurve() {
     <Card
       title="Equity Curve"
       action={
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
           <LegendDot color={lineColor} label="Equity" />
           <LegendDot color={CHART.neutral} label="Starting capital" />
         </div>
@@ -64,7 +66,7 @@ export function EquityCurve() {
       {data.length === 0 ? (
         <EmptyState message="Close a trade to start your equity curve." />
       ) : (
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={narrow ? 220 : 280}>
           <AreaChart data={data} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="equityFill" x1="0" y1="0" x2="0" y2="1">
@@ -90,7 +92,7 @@ export function EquityCurve() {
               tick={AXIS_TICK}
               axisLine={false}
               tickLine={false}
-              width={60}
+              width={narrow ? 48 : 60}
             />
             <ReferenceLine y={account.startingCapital} stroke={CHART.neutral} strokeDasharray="4 4" />
             <Tooltip content={<EquityTooltip />} cursor={{ stroke: CHART.axis, strokeDasharray: '3 3' }} />

@@ -65,3 +65,12 @@ input[type="number"] {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Mobile: no grey tap flash, no iOS text inflation, and no sideways page scroll from stray content. */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  overflow-x: clip;
+}

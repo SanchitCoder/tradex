@@ -376,11 +376,11 @@ export function TradeForm({ trade, onDone }: TradeFormProps) {
         <Field label="Notes / reason for entry" htmlFor="tf-notes">
           <textarea
             id="tf-notes"
-            rows={1}
+            rows={2}
             value={values.notes}
             onChange={(e) => set('notes', e.target.value)}
             placeholder="Why this trade? What confirms it?"
-            className={`${inputClass} min-h-[38px] resize-y`}
+            className={`${inputClass} resize-y`}
           />
         </Field>
       </div>
@@ -402,7 +402,7 @@ export function TradeForm({ trade, onDone }: TradeFormProps) {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit">
+        <Button type="submit" className="w-full sm:w-auto">
           {editing ? <Save size={16} aria-hidden /> : <Plus size={16} aria-hidden />}
           {editing ? 'Save changes' : 'Log trade'}
         </Button>

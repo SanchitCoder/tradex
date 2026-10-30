@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const inputClass =
-  'w-full rounded-md border border-line bg-bg px-3 py-2 text-sm text-ink placeholder:text-dim/60 ' +
+  'w-full min-h-11 rounded-md border border-line bg-bg px-3 py-2 text-base text-ink placeholder:text-dim/60 sm:min-h-0 sm:text-sm ' +
   'transition-colors hover:border-dim/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 

@@ -23,10 +23,10 @@ function Labeled({ label, children }: { label: string; children: ReactNode }) {
 export function Filters({ filters, onChange, assets, strategies }: FiltersProps) {
   const set = <K extends keyof TradeFilters>(key: K, value: TradeFilters[K]) =>
     onChange({ ...filters, [key]: value })
-  const cls = `${inputClass} !py-1.5`
+  const cls = `${inputClass} sm:!py-1.5`
 
   return (
-    <div className="grid grid-cols-2 gap-3 border-b border-line p-4 md:grid-cols-4 xl:grid-cols-8">
+    <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 border-b border-line p-4 md:grid-cols-4 xl:grid-cols-8">
       <Labeled label="Asset">
         <select className={cls} value={filters.asset} onChange={(e) => set('asset', e.target.value)}>
           <option value="">All</option>
@@ -92,7 +92,7 @@ export function Filters({ filters, onChange, assets, strategies }: FiltersProps)
           type="button"
           disabled={!hasActiveFilters(filters)}
           onClick={() => onChange(EMPTY_FILTERS)}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm text-dim transition-colors hover:bg-panel2 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm sm:min-h-0 text-dim transition-colors hover:bg-panel2 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
         >
           <FilterX size={14} aria-hidden /> Clear
         </button>

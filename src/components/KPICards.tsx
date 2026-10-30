@@ -19,12 +19,12 @@ interface KpiProps {
 
 function Kpi({ label, value, sub, icon: Icon, valueClass = 'text-ink', iconClass = 'text-dim' }: KpiProps) {
   return (
-    <div className="rounded-xl border border-line bg-panel p-4 transition-colors hover:border-dim/40">
+    <div className="rounded-xl border border-line bg-panel p-3 transition-colors sm:p-4 hover:border-dim/40">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-wider text-dim">{label}</span>
-        <Icon size={16} className={iconClass} aria-hidden />
+        <span className="text-[11px] font-medium uppercase tracking-wider text-dim sm:text-xs">{label}</span>
+        <Icon size={16} className={`shrink-0 ${iconClass}`} aria-hidden />
       </div>
-      <div className={`mt-2 truncate font-mono text-xl font-semibold tabular-nums sm:text-2xl ${valueClass}`}>
+      <div className={`mt-2 break-words font-mono text-base font-semibold leading-tight tabular-nums min-[400px]:text-xl sm:text-2xl ${valueClass}`}>
         {value}
       </div>
       <div className="mt-1 font-mono text-xs tabular-nums text-dim sm:truncate">{sub}</div>

@@ -12,7 +12,7 @@ interface CardProps {
 
 export function Card({ title, subtitle, action, children, className = '', flush }: CardProps) {
   return (
-    <section className={`rounded-xl border border-line bg-panel transition-colors ${className}`}>
+    <section className={`min-w-0 rounded-xl border border-line bg-panel transition-colors ${className}`}>
       {(title || action) && (
         <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
           <div className="min-w-0">

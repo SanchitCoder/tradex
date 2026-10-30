@@ -11,7 +11,7 @@ import {
 } from '../utils/formatters'
 import { Card, EmptyState } from './ui/Card'
 
-const th = 'px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-dim'
+const th = 'px-1.5 py-2 text-[10px] sm:px-3 sm:text-[11px] font-semibold uppercase tracking-wider text-dim'
 
 function BreakdownTable({ title, rows }: { title: string; rows: GroupRow[] }) {
   return (
@@ -20,26 +20,26 @@ function BreakdownTable({ title, rows }: { title: string; rows: GroupRow[] }) {
         <EmptyState message="No closed trades yet." />
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[420px] text-sm">
+          <table className="w-full text-xs sm:min-w-[420px] sm:text-sm">
             <thead className="border-b border-line">
               <tr>
                 <th className={`${th} text-left`}>Group</th>
                 <th className={`${th} text-right`}>Trades</th>
-                <th className={`${th} text-right`}>Win %</th>
-                <th className={`${th} text-right`}>PF</th>
-                <th className={`${th} text-right`}>Avg R</th>
+                <th className={`${th} whitespace-nowrap text-right`}>Win %</th>
+                <th className={`${th} hidden text-right sm:table-cell`}>PF</th>
+                <th className={`${th} hidden text-right sm:table-cell`}>Avg R</th>
                 <th className={`${th} text-right`}>Net P&L</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {rows.map((r) => (
                 <tr key={r.key} className="transition-colors hover:bg-panel2">
-                  <td className="px-3 py-2 font-medium text-ink">{r.key}</td>
-                  <td className="px-3 py-2 text-right font-mono tabular-nums">{r.trades}</td>
-                  <td className="px-3 py-2 text-right font-mono tabular-nums">{formatPercent(r.winRate, 0)}</td>
-                  <td className="px-3 py-2 text-right font-mono tabular-nums">{formatProfitFactor(r.profitFactor)}</td>
-                  <td className={`px-3 py-2 text-right font-mono tabular-nums ${pnlColor(r.avgR)}`}>{formatR(r.avgR)}</td>
-                  <td className={`px-3 py-2 text-right font-mono font-semibold tabular-nums ${pnlColor(r.netPnl)}`}>
+                  <td className="px-1.5 py-2 font-medium text-ink sm:px-3">{r.key}</td>
+                  <td className="px-1.5 py-2 text-right font-mono tabular-nums sm:px-3">{r.trades}</td>
+                  <td className="px-1.5 py-2 text-right font-mono tabular-nums sm:px-3">{formatPercent(r.winRate, 0)}</td>
+                  <td className="hidden px-3 py-2 text-right font-mono tabular-nums sm:table-cell">{formatProfitFactor(r.profitFactor)}</td>
+                  <td className={`hidden px-3 py-2 text-right font-mono tabular-nums sm:table-cell ${pnlColor(r.avgR)}`}>{formatR(r.avgR)}</td>
+                  <td className={`px-1.5 py-2 text-right font-mono font-semibold tabular-nums sm:px-3 ${pnlColor(r.netPnl)}`}>
                     {formatSignedCurrency(r.netPnl)}
                   </td>
                 </tr>
@@ -65,7 +65,7 @@ export function Breakdowns() {
   )
 
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
       <BreakdownTable title="Crypto vs Commodities" rows={groups.category} />
       <BreakdownTable title="Long vs Short" rows={groups.direction} />
       <BreakdownTable title="By Strategy" rows={groups.strategy} />
